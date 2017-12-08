@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'yordi_tests/cli'
+YordiTests::CLI.start
