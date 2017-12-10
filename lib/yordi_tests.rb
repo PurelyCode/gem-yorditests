@@ -1,7 +1,6 @@
 require 'yordi_tests/version'
 require 'yordi_tests/client'
 module YordiTests
-  DEFAULT_APIKEY = "none"
 
   HOST = ENV['YORDI_HOST'].freeze || 'https://yorditests.com'.freeze
   START_PATH = '/api/v1/start'.freeze
@@ -22,16 +21,16 @@ module YordiTests
 
   module_function
 
-  def rest_client=(v)
-    @rest_client = v
+  def client=(v)
+    @client = v
   end
 
-  def rest_client
-    @rest_client
+  def client
+    @client
   end
 
   # set default value
-  @rest_client = Client
+  @client = Client
 
   def new_client(apikey)
     client = new

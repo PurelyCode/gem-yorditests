@@ -7,7 +7,7 @@ require_relative 'mock_client'
 class TestCliInit < Minitest::Test
 
   def setup
-    YordiTests.rest_client = MockClient
+    YordiTests.client = MockClient
   end
 
   def teardown

@@ -7,7 +7,7 @@ require_relative 'mock_client'
 class TestCli < Minitest::Test
 
   def setup
-    YordiTests.rest_client = MockClient
+    YordiTests.client = MockClient
     args = %w[init -k api]
     YordiTests::CLI.start(args)
   end

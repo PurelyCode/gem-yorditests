@@ -29,7 +29,7 @@ module YordiTests
 
     desc 'test PATH_TO_SCREENSHOTS', 'Run a Yordi test on all images in folder'
     method_option :name, type: :string, default: 'Generic Test', aliases: '-n', desc: 'Name for this test in report.'
-    method_option :clean_dir, type: :boolean, default: false, aliases: '-D', desc: 'Delete all screenshots in the folder you specified after test completes.'
+    method_option :clean_dir, type: :boolean, default: false, aliases: '-D', desc: 'This will DELETE all screenshots in PATH_TO_SCREENSHOTS after test completes.'
     method_option :sync_all, type: :boolean, default: false, aliases: '-a', desc: 'Push all screens to YordiTests.com for evaluation.'
     method_option :sync_failures, type: :boolean, default: false, aliases: '-f', desc: 'Push only failed screens to YordiTests.com for evaluation.'
     method_option :filenames, type: :array, aliases: '-i', desc: 'Only test these specific files'

@@ -94,7 +94,7 @@ module YordiTests
       # sync with remote
       puts 'Syncing with YordiTests'
       report = read_report
-      client = YordiTests.rest_client
+      client = YordiTests.client
       client.apikey = store.apikey if store.apikey
       if !report.nil? && !report['tests'].empty?
         reports = report['tests']
@@ -114,7 +114,7 @@ module YordiTests
             filename = SCREENS_PATH + '/' + benchmark[LOCAL_FILENAME]
             client.upload filename, item[SCREENNAME]
           end
-          client.stop if sync_all || sync_failures
+          client.stop
         end
       end
     end
@@ -125,7 +125,7 @@ module YordiTests
       ## no api key
       return unless local_store.apikey
 
-      client = YordiTests.rest_client
+      client = YordiTests.client
       client.apikey = local_store.apikey
       remote_data = client.fetch_application
 
