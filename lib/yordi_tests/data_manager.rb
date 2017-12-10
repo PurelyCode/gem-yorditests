@@ -26,7 +26,6 @@ module YordiTests
       local_store = DataStore.new(read_store)
       ## no api key
       return unless local_store.apikey
-
       client = YordiTests.client
       client.apikey = local_store.apikey
       remote_data = client.fetch_application
@@ -163,9 +162,7 @@ module YordiTests
     end
 
     def replace_benchmarks(client, local_store, remote_store, screens)
-
-      # no api key
-      screens = remote_store.all_screens unless screens
+      screens ||= remote_store.all_screens
 
       screens.each do |screen|
         benchmark = remote_store.benchmark_by_screenname(screen)
@@ -187,7 +184,7 @@ module YordiTests
     def replace_masks(local_store, remote_store, screens)
       # global mask
       local_store.put(MASKED_AREA, remote_store.get(MASKED_AREA))
-      screens = remote_store.all_screens unless screens
+      screens ||= remote_store.all_screens
       screens.each do |screen|
         benchmark = remote_store.benchmark_by_screenname(screen)
         # download benchmark
