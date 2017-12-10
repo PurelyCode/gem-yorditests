@@ -32,8 +32,8 @@ module YordiTests
       output_path
     end
 
-    def perform(screenname, benchmark_path, screenshot_path, global_mask, screen_mask)
-      response = {screenname: screenname, passed: false, message: 'None', has_diff: false, diff: nil}
+    def perform( benchmark_path, screenshot_path, global_mask, screen_mask)
+      response = { passed: false, message: 'None', has_diff: false, diff: nil}
 
       #compare images
       # begin

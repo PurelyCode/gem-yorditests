@@ -27,7 +27,7 @@ module YordiTests
     end
 
 
-    desc 'test PATH_TO_SCREENSHOTS', 'Run a yordi test on all images in folder'
+    desc 'test PATH_TO_SCREENSHOTS', 'Run a Yordi test on all images in folder'
     method_option :name, type: :string, default: 'Generic Test', aliases: '-n', desc: 'Name for this test in report.'
     method_option :clean_dir, type: :boolean, default: false, aliases: '-D', desc: 'Delete all screenshots in the folder you specified after test completes.'
     method_option :sync_all, type: :boolean, default: false, aliases: '-a', desc: 'Push all screens to YordiTests.com for evaluation.'
@@ -41,7 +41,7 @@ module YordiTests
       DataManager.run_test(path_to_screens, options.name, options.clean_dir, options.sync_all, options.sync_failures, options.filenames, options.screens)
     end
 
-    desc 'make_report', 'Regenerate a yordi report based on json report'
+    desc 'make_report', 'Regenerate a Yordi report based on json report'
 
     def make_report
       DataManager.generate_report

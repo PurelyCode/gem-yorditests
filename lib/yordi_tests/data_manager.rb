@@ -86,7 +86,8 @@ module YordiTests
         end
         global_mask = local_store.get(MASKED_AREA)
         screen_mask = benchmark.nil? ? nil : benchmark[MASKED_AREA]
-        response = ImageCompare.perform(screenname, benchmark_path, screenshot_path, global_mask, screen_mask)
+        response = ImageCompare.perform(benchmark_path, screenshot_path, global_mask, screen_mask)
+        response[SCREENNAME] = screenname
         response[LOCAL_FILENAME] = local_name
         responses << response
         File.delete item if clean_dir
