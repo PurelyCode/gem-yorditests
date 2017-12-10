@@ -1,6 +1,6 @@
 # YordiTests CLI 
 
-The yordi_tests gem is a companion for [YordiTests](https://yorditests.com) 
+The yordi_tests gem is a companion for [YordiTests](https://yorditests.com). 
 This project is rapidly changing and in alpha phase, use at your own risk. 
 
 Basically YordiTests compares screenshots with benchmarks and can apply masks to hide dynamic content. 
@@ -24,18 +24,18 @@ Install it yourself as:
     $ gem install yordi_tests
 
 ## Usage
-It's a CLI with thor so calling help on the command line will give you more details
+It's a CLI with Thor so calling help on the command line will give you more details
 ``` ruby
   yordi help
 ```
-To start a .yordi_tests directory must be initialized, either of these commands will create the direct relative to the where you execute it. 
-Using an apikey will automatically sync your local test directory with the benchmarks online. 
+To start a .yordi_tests directory must be initialized, either of these commands will create the directory relative 
+to the where you execute it. Using an apikey will automatically sync your local test directory with the benchmarks online. 
 ``` ruby
   yordi help init  # for all the options
   yordi init   
   yordi init --api_key apikey_from_yorditests.com
 ```
-To Test
+To test your screenshots
 ``` ruby
   yordi help test  # for more options
   yordi test /path/to/screenshots
@@ -51,26 +51,26 @@ Refetch benchmarks and masks from online
   yordi help fetch  # for more options
   yordi fetch -bm  # fetches all benchmark details and masks from online for testing
 ```
-Push benchmarks and masks from online (not yet implemented)
+Push benchmarks and masks to online store (not yet implemented)
 ``` ruby 
   yordi help push  # for more options
   yordi push -bm  # pushes all benchmark details and masks to online store
 ```
 ### Standalone Scenario
 So you have run an appium or selenium test that made a lot of screenshots
-Where ever you want to run your yordi test do the follow
+Wherever you want to run your yordi test do the follow
 ``` ruby
   yordi init
   yordi test path/to/screenshot
   yordi open_report
 ```
 At which point you will see a report and all of your screens will have passed the test as there was no benchmark.
-So run your appium or selenium tests again and create the screenshots
+So run your appium or selenium tests again and create the screenshots a second time.
 ``` ruby
   yordi test path/to/screenshot
   yordi open_report
 ```
-Now there is a good chance that some of your screenshots failed the test due to status bars with time or other
+Now there is a good chance that some of your screenshots haved failed the test due to status bars with time or other
 dynamic issues. If the screen changes are different but valid you need to mask this dynamic area to ensure 100% on the test. 
 This is easiest done with YordiTests.com editor, however the masks are simple JSON areas. 
 
@@ -100,6 +100,13 @@ Here is an example of a masked_area value, masked_area is an array.
 In the config.json the property masked_area: is available in the root and in individual screens in the test_benchmarks array. 
 Placing a mask in root will have the mask be applied to all screens during the comparision. Placing the mask on a screen will apply the mask only to that screen.
 So the screens get compared after both the benchmark and resulting screenshot have all global and local masks applied. 
+
+At some point you will want to update your benchmarks, for example if the design has changed. If you are using YordiTests.com 
+then if you sync your tests with the online store you can make the screenshot the benchmark online
+and then re-fetch the benchmarks from the comand with `yordi fetch -b`.  
+
+However if you are running in standalone mode to update a benchmark at the moment you must manually copy the 
+screenshot into the benchmark folder in the subdirectories of .yordi_tests.  Eventually a command will be added to make this easier. 
 
 
 ## Development
