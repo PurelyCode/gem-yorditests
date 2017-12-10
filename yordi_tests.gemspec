@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["oqrbrian@gmail.com"]
 
   spec.summary       = "This is a CLI to run standalone or integrate with online YordiTests.com"
-  spec.description   = "This is and alpha versiona nd under constant development, not yet stable"
+  spec.description   = "This is an alpha version and under continual development, not yet stable"
   spec.homepage      = "https://www.yorditests.com"
   spec.license       = "MIT"
   spec.required_ruby_version = '~> 2.0'
