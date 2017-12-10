@@ -2,7 +2,7 @@ require 'test_helper'
 require 'fileutils'
 require 'yordi_tests'
 require 'yordi_tests/cli'
-require 'yordi_tests/local_store'
+require 'yordi_tests/data_store'
 require_relative 'mock_client'
 class TestCli < Minitest::Test
 

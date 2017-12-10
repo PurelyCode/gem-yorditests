@@ -7,12 +7,13 @@ module YordiTests
 
     desc 'init --api_key', 'Initializes a Yordi test directory at .yordi_tests relative to where you execute the command'
     method_option :api_key, type: :string, aliases: '-k', desc: 'APIKEY from YordiTest.com if you want to sync results online'
+    method_option :force, type: :boolean, aliases: '-f', desc: 'Force re-initialization'
 
     def init
       puts 'init'
-      if Dir.exist?(YORDI_DIR)
+      if DataManager.has_store
         puts 'Already initialized'
-        exit(1)
+        exit(1) unless options.force
       end
       puts "Creating #{YORDI_DIR} directory"
       DataManager.create_store

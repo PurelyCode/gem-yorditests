@@ -1,7 +1,6 @@
 require 'yordi_tests'
 require 'mini_magick'
 require 'securerandom'
-require 'yordi_tests/local_store'
 module YordiTests
   module ImageCompare
     module_function

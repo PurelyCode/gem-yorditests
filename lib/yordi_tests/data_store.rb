@@ -8,7 +8,7 @@ module YordiTests
   LOCAL_FILENAME = 'local_filename'.freeze
   TITLE = 'title'.freeze
 
-  class LocalStore
+  class DataStore
 
     def initialize(json_store)
       @store = json_store
@@ -49,7 +49,14 @@ module YordiTests
         @store[BENCHMARKS][benchmark_pos][LOCAL_FILENAME] = benchmark[LOCAL_FILENAME]
       end
     end
-
+    def add_benchmark(screenname, local_name)
+      benchmark = {SCREENNAME => screenname,
+                   MASKED_AREA => nil,
+                   FILENAME => local_name,
+                   LOCAL_FILENAME => local_name}
+      @store[BENCHMARKS] << benchmark.dup
+      benchmark
+    end
     def update_mask(benchmark)
       benchmark_pos = benchmark_pos_by_screenname(benchmark[SCREENNAME])
       if benchmark_pos < 0

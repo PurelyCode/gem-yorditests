@@ -1,5 +1,5 @@
 require 'yordi_tests'
-require 'yordi_tests/local_store'
+require 'yordi_tests/data_store'
 require 'yordi_tests/image_compare'
 require 'yordi_tests/generators/report'
 module YordiTests
@@ -10,6 +10,9 @@ module YordiTests
       {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
     end
 
+    def has_store
+      Dir.exist? YORDI_DIR
+    end
     def create_store
       Dir.mkdir(YORDI_DIR) unless Dir.exist? YORDI_DIR
     end
@@ -38,7 +41,7 @@ module YordiTests
 
     # Test entry from the CLI
     def run_test(path_to_screens, name, clean_dir, sync_all, sync_failures, filenames, screens)
-      local_store = LocalStore.new(read_store)
+      store = DataStore.new(read_store)
       if filenames
         files = []
         filenames.each do |filename|
@@ -53,22 +56,18 @@ module YordiTests
       responses = []
       files.each_with_index do |item, index|
         puts "Testing #{item}"
-        screenname = (!screens.nil? && screens.size > index) ? screens[index] : File.basename(item, '.*')
-        benchmark = local_store.benchmark_by_screenname(screenname)
+        screenname = !screens.nil? && screens.size > index ? screens[index] : File.basename(item, '.*')
+        benchmark = store.benchmark_by_screenname(screenname)
         local_name = benchmark.nil? ? sanitize(screenname) + File.extname(item) : benchmark[LOCAL_FILENAME]
         benchmark_path = File.join(BENCHMARKS_PATH, local_name)
         screenshot_path = File.join(SCREENS_PATH, local_name)
         FileUtils.copy item, screenshot_path
         if benchmark.nil?
           FileUtils.copy item, benchmark_path
-          benchmark = {SCREENNAME => screenname,
-                       MASKED_AREA => nil,
-                       FILENAME => local_name,
-                       LOCAL_FILENAME => local_name}
-          local_store.update_benchmark(benchmark)
-          save_store local_store.data
+          benchmark = store.add_benchmark(screenname, local_name)
+          save_store store.data
         end
-        global_mask = local_store.get(MASKED_AREA)
+        global_mask = store.get(MASKED_AREA)
         screen_mask = benchmark.nil? ? nil : benchmark[MASKED_AREA]
         response = ImageCompare.perform(benchmark_path, screenshot_path, global_mask, screen_mask)
         response[SCREENNAME] = screenname
@@ -80,14 +79,13 @@ module YordiTests
       File.open(REPORT_FILE, 'w') {|file| file.write(report_hash.to_json)}
 
       # sync with yorditests.com if desired
-      sync_with_yordi local_store, sync_all, sync_failures if sync_all || sync_failures
+      sync_with_yordi store, sync_all, sync_failures if sync_all || sync_failures
       generate_report
     end
 
     def generate_report
       # generate report
       YordiTests::Generators::Report.start([REPORT_HTML, read_report])
-
     end
 
     def sync_with_yordi(store, sync_all, sync_failures)
@@ -122,7 +120,7 @@ module YordiTests
 
     # Fetch entry from the CLI
     def fetch(get_benchmarks, get_masks, screens)
-      local_store = LocalStore.new(read_store)
+      local_store = DataStore.new(read_store)
       ## no api key
       return unless local_store.apikey
 
@@ -133,7 +131,7 @@ module YordiTests
       ## no remote store
       return unless remote_data
 
-      remote_store = LocalStore.new(remote_data)
+      remote_store = DataStore.new(remote_data)
 
       update_store_base(local_store, remote_store)
       replace_benchmarks(client, local_store, remote_store, screens) if get_benchmarks
