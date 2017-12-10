@@ -42,10 +42,10 @@ module YordiTests
       if filenames
         files = []
         filenames.each do |filename|
-          files << path_to_screens + '/' + filename
+          files << File.join(path_to_screens, filename)
         end
       else
-        files = Dir.glob(path_to_screens + '/*.png').sort
+        files = Dir.glob(File.join(path_to_screens, '*.png')).sort
       end
 
       Dir.mkdir(BENCHMARKS_PATH) unless Dir.exist? BENCHMARKS_PATH
@@ -56,8 +56,8 @@ module YordiTests
         screenname = (!screens.nil? && screens.size > index) ? screens[index] : File.basename(item, '.*')
         benchmark = local_store.benchmark_by_screenname(screenname)
         local_name = benchmark.nil? ? sanitize(screenname) + File.extname(item) : benchmark[LOCAL_FILENAME]
-        benchmark_path = BENCHMARKS_PATH + '/' + local_name
-        screenshot_path = SCREENS_PATH + '/' + local_name
+        benchmark_path = File.join(BENCHMARKS_PATH, local_name)
+        screenshot_path = File.join(SCREENS_PATH, local_name)
         FileUtils.copy item, screenshot_path
         if benchmark.nil?
           FileUtils.copy item, benchmark_path
@@ -112,7 +112,7 @@ module YordiTests
             next unless sync_all || !item['passed']
             puts item[SCREENNAME]
             benchmark = store.benchmark_by_screenname(item[SCREENNAME])
-            filename = SCREENS_PATH + '/' + benchmark[LOCAL_FILENAME]
+            filename = File.join(SCREENS_PATH, benchmark[LOCAL_FILENAME])
             client.upload filename, item[SCREENNAME]
           end
           client.stop
@@ -164,7 +164,7 @@ module YordiTests
         benchmark_image = client.fetch_benchmark(screen)
 
         # update store to reflex file name of benchmark
-        file_path = "#{BENCHMARKS_PATH}/#{benchmark[LOCAL_FILENAME]}"
+        file_path = File.join(BENCHMARKS_PATH, benchmark[LOCAL_FILENAME])
         File.open(file_path, 'w') {|file| file.write(benchmark_image)}
         local_store.update_benchmark(benchmark)
       end

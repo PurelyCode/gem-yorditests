@@ -13,11 +13,11 @@ module YordiTests
 
 
   YORDI_DIR = ENV['YORDI_DIR'].freeze || '.yordi_tests'.freeze
-  BENCHMARKS_PATH = YORDI_DIR + '/benchmarks'.freeze
-  SCREENS_PATH = YORDI_DIR + '/screenshots'.freeze
-  CONFIG_FILE = YORDI_DIR + '/config.json'.freeze
-  REPORT_FILE = YORDI_DIR + '/report.json'.freeze
-  REPORT_HTML = YORDI_DIR + '/report.html'.freeze
+  BENCHMARKS_PATH = File.join(YORDI_DIR, 'benchmarks').freeze
+  SCREENS_PATH = File.join(YORDI_DIR, 'screenshots').freeze
+  CONFIG_FILE = File.join(YORDI_DIR, 'config.json').freeze
+  REPORT_FILE = File.join(YORDI_DIR, 'report.json').freeze
+  REPORT_HTML = File.join(YORDI_DIR, 'report.html').freeze
 
   # set default value
   @client = Client
@@ -31,7 +31,6 @@ module YordiTests
   def client
     @client
   end
-
 
 
   def new_client(apikey)
