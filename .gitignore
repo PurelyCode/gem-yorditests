@@ -8,3 +8,6 @@
 /spec/reports/
 /tmp/
 /.idea/
+/test/fixtures/
+/test/fixtures/benchmarks/
+/test/fixtures/screenshots/

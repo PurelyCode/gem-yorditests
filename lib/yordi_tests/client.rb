@@ -1,16 +1,14 @@
-require 'json'
 require 'rest-client'
-
+require 'yordi_tests'
 module YordiTests
-  class Client
-    HOST = 'https://yorditests.com'.freeze
-    START_PATH = '/api/v1/start'.freeze
-    UPLOAD_PATH = '/api/v1/upload'.freeze
-    STOP_PATH = '/api/v1/stop'.freeze
 
-    # @param [String] api_key
-    def initialize(api_key)
-      @api_key = api_key
+  module Client
+    def get_apikey
+      @api_key
+    end
+
+    def set_apikey(v)
+      @api_key = v
     end
 
     def auth_header
@@ -41,5 +39,19 @@ module YordiTests
 
       true
     end
+
+    def fetch_application
+      response = RestClient::Request.execute(method: :get, url: HOST + FETCH_APPLICATION,
+                                             payload: {}, headers: {authorization: auth_header})
+      JSON(response)
+    end
+
+    def fetch_benchmark(screen_name)
+      RestClient::Request.execute(method: :get, url: HOST + FETCH_BENCHMARK,
+                                  payload: {screenname: screen_name}, headers: {authorization: auth_header})
+
+    end
+
+
   end
 end

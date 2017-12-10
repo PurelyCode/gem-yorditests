@@ -1,0 +1,99 @@
+<html>
+<head>
+  <title><%= report_data['name'] %></title>
+  <style>
+    body {
+      font-family: "Roboto", Helvetica, sans-serif;
+      background-color: #8F5699;
+    }
+
+    .passed {
+      display: none;
+    }
+
+    table {
+      background: #fff;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 2%;
+    }
+
+    h1 {
+      margin-left: 2%;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    .toggle {
+      margin-right: 2%;
+      display: inline-block;
+      color: white;
+      float: right;
+      clear: both;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+      $(document).ready(function () {
+          $('.toggle').on('click', function () {
+              if ($('.passed').css('display') == 'none') {
+                  $('.passed').css('display', 'table-row');
+                  $('.toggle').text('Hide successful tests');
+              } else {
+
+                  $('.passed').css('display', 'none');
+                  $('.toggle').text('Show successful tests');
+              }
+          })
+      });
+  </script>
+</head>
+<body>
+<a class="toggle" href="#">
+  Show successful tests
+</a>
+<h1><%= report_data['name'] %></h1>
+
+<table style="width:96%">
+
+  <% report_data['tests'].each do |item|
+    class_name = item['passed'] ? 'passed' : 'failed'
+          %>
+    <tr class="<%= class_name %>">
+      <td colspan="3">
+        <h2> <%= item['screenname'] %></h2>
+        <p>
+          <b style="font-size:24px;"><%= item['passed'] ? 'Passed' : 'Failed' %></b><br/>
+          <%= item['passed'] ? item['message'] : '' %><br/>
+        </p>
+
+      </td>
+    </tr>
+    <tr class="<%= class_name %>">
+      <td>
+        <b>Benchmark</b><br/>
+        <img style="width:100%" src="benchmarks/<%= item['local_filename'] %>"/>
+
+      </td>
+
+      <td>
+        <% if item['has_diff'] %>
+          <b>Diff</b><br/>
+          <img style="width:100%" src="screenshots/<%= item['local_filename'] %>.diff.png"/>
+        <% end %>
+      </td>
+
+      <td>
+        <b>Result</b><br/>
+        <img style="width:100%" src="benchmarks/<%= item['local_filename'] %>"/>
+
+      </td>
+    </tr>
+  <% end %>
+
+</table>
+</body>
+</html>

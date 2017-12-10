@@ -1,7 +1,7 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "yordi_tests/version"
+require "yordi_tests"
 
 Gem::Specification.new do |spec|
   spec.name          = "yordi_tests"
@@ -38,6 +38,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "cucumber", "~>3.1.0"
-  spec.add_development_dependency "aruba", "~>0.14.2"
 end
