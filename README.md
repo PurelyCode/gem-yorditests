@@ -33,7 +33,7 @@ Using an apikey will automatically sync your local test directory with the bench
 ``` ruby
   yordi help init  # for all the options
   yordi init   
-  yrodi init --api_key apikey_from_yorditests.com
+  yordi init --api_key apikey_from_yorditests.com
 ```
 To Test
 ``` ruby
