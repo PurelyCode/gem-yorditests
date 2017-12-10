@@ -70,7 +70,7 @@ module YordiTests
     desc 'open_report', 'Open the last generated report'
 
     def open_report
-      system "open #{DataManager.path_with_sub(REPORT_HTML)}"
+      system "open #{REPORT_HTML}"
     end
 
 

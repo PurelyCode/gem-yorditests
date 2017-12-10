@@ -3,11 +3,13 @@ require 'yordi_tests'
 module YordiTests
 
   module Client
-    def get_apikey
+    module_function
+
+    def apikey
       @api_key
     end
 
-    def set_apikey(v)
+    def apikey=(v)
       @api_key = v
     end
 

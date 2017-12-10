@@ -1,19 +1,20 @@
 require 'json'
 module MockClient
-  @@api_key
 
-  def get_apikey
-    @@api_key
+  module_function
+  @api_key
+
+  def apikey
+    @api_key
   end
 
-  def set_apikey(v)
-    @@api_key = v
+  def apikey=(v)
+    @api_key = v
   end
-
 
   # @param [String] test_name
   def start(test_name)
-    @@test_key = 'mocked_key'
+    @test_key = 'mocked_key'
     true
   end
 

@@ -7,15 +7,14 @@ require_relative 'mock_client'
 class TestCli < Minitest::Test
 
   def setup
-    YordiTests.set_rest_client YordiTests::Impl.create(MockClient)
-    YordiTests::DataManager.update_sub_dir 'tmp/'
+    YordiTests.rest_client = MockClient
     args = %w[init -k api]
     YordiTests::CLI.start(args)
   end
 
   def teardown
-    if Dir.exist?("tmp/#{YordiTests::YORDI_DIR}")
-      FileUtils.remove_dir("tmp/#{YordiTests::YORDI_DIR}")
+    if Dir.exist?(YordiTests::YORDI_DIR)
+      FileUtils.remove_dir(YordiTests::YORDI_DIR)
     end
   end
 

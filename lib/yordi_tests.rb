@@ -13,39 +13,30 @@ module YordiTests
   FETCH_BENCHMARK = '/api/v1/benchmark'.freeze
 
 
-  YORDI_DIR = '.yordi_tests'.freeze
+  YORDI_DIR = ENV['YORDI_DIR'].freeze || '.yordi_tests'.freeze
   BENCHMARKS_PATH = YORDI_DIR + '/benchmarks'.freeze
   SCREENS_PATH = YORDI_DIR + '/screenshots'.freeze
   CONFIG_FILE = YORDI_DIR + '/config.json'.freeze
   REPORT_FILE = YORDI_DIR + '/report.json'.freeze
   REPORT_HTML = YORDI_DIR + '/report.html'.freeze
 
-
-  # this function is to allow injection of the
-  # rest client for mocking in tests
-  class Impl
-    def self.create provider
-      o = new
-      o.extend(provider)
-    end
-  end
-
   module_function
 
-  def get_rest_client
-    @rest_client
-  end
-
-  def set_rest_client(v)
+  def rest_client=(v)
     @rest_client = v
   end
 
+  def rest_client
+    @rest_client
+  end
+
   # set default value
-  @rest_client = YordiTests::Impl.create(Client)
+  @rest_client = Client
 
   def new_client(apikey)
-    client = YordiTests::Impl.create(Client)
-    client.set_apikey(apikey)
+    client = new
+    client.extend(Client)
+    client.apikey = apikey
     client
   end
 end
