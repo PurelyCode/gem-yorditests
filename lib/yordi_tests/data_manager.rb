@@ -40,7 +40,7 @@ module YordiTests
         file = File.read path
         JSON(file)
       else
-        puts "No file at: #{path}"
+        puts "No file at: #{path} did you call initialize this directory"
       end
 
     end
@@ -64,13 +64,14 @@ module YordiTests
 
       benchmark_root_dir = path_with_sub(BENCHMARKS_PATH)
       screenshot_root_dir = path_with_sub(SCREENS_PATH)
+      Dir.mkdir(benchmark_root_dir) unless Dir.exist? benchmark_root_dir
       Dir.mkdir(screenshot_root_dir) unless Dir.exist? screenshot_root_dir
       responses = []
       files.each_with_index do |item, index|
         puts "Testing #{item}"
         screenname = (!screens.nil? && screens.size > index) ? screens[index] : File.basename(item, '.*')
         benchmark = local_store.benchmark_by_screenname(screenname)
-        local_name = benchmark.nil? ? screenname + File.extname(item) : benchmark[LOCAL_FILENAME]
+        local_name = benchmark.nil? ? sanitize(screenname) + File.extname(item) : benchmark[LOCAL_FILENAME]
         benchmark_path = benchmark_root_dir + "/" + local_name
         screenshot_path = screenshot_root_dir + "/" + local_name
         FileUtils.copy item, screenshot_path
