@@ -17,6 +17,9 @@ module YordiTests
     def apikey
       get(APIKEY)
     end
+    def title
+      get(TITLE)
+    end
 
     def data
       @store
@@ -38,6 +41,10 @@ module YordiTests
       end
       screens
     end
+    def update_root_data(title, apikey)
+      put(TITLE, title)
+      put(APIKEY, apikey)
+    end
 
     def update_benchmark(benchmark)
       benchmark_pos = benchmark_pos_by_screenname(benchmark[SCREENNAME])
@@ -49,6 +56,7 @@ module YordiTests
         @store[BENCHMARKS][benchmark_pos][LOCAL_FILENAME] = benchmark[LOCAL_FILENAME]
       end
     end
+
     def add_benchmark(screenname, local_name)
       benchmark = {SCREENNAME => screenname,
                    MASKED_AREA => nil,
@@ -57,6 +65,7 @@ module YordiTests
       @store[BENCHMARKS] << benchmark.dup
       benchmark
     end
+
     def update_mask(benchmark)
       benchmark_pos = benchmark_pos_by_screenname(benchmark[SCREENNAME])
       if benchmark_pos < 0

@@ -11,16 +11,12 @@ module YordiTests
 
     def init
       puts 'init'
-      if DataManager.has_store
+      if DataManager.store?
         puts 'Already initialized'
         exit(1) unless options.force
       end
-      puts "Creating #{YORDI_DIR} directory"
-      DataManager.create_store
-
-      store = DataManager.default_store(options.api_key)
-      puts "Saving store #{CONFIG_FILE}"
-      DataManager.save_store store
+      puts "Initializing #{YORDI_DIR} "
+      DataManager.create_store(options.api_key)
 
       return unless options.api_key
       puts 'Fetching remote store.'
@@ -38,7 +34,6 @@ module YordiTests
 
     def test(path_to_screens)
       puts "Testing #{path_to_screens} name: #{options.name}, clean_dir: #{options.clean_dir}, sync_all: #{options.sync_all}, sync_failures: #{options.sync_failures}, filenames: #{options.filenames}, screens: #{options.screens}"
-
       DataManager.run_test(path_to_screens, options.name, options.clean_dir, options.sync_all, options.sync_failures, options.filenames, options.screens)
     end
 

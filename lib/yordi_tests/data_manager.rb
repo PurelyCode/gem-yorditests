@@ -10,37 +10,57 @@ module YordiTests
       {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
     end
 
-    def has_store
-      Dir.exist? YORDI_DIR
-    end
-    def create_store
-      Dir.mkdir(YORDI_DIR) unless Dir.exist? YORDI_DIR
-    end
 
-    def read_store
-      read_json(CONFIG_FILE)
-    end
-
-    def read_report
-      read_json(REPORT_FILE)
+    # Create Store
+    #
+    #   Called during init process on the CLI
+    #
+    def create_store(apikey)
+      verify_directories
+      store = DataManager.default_store(apikey)
+      puts "Saving store #{CONFIG_FILE}"
+      DataManager.save_store store
     end
 
-    def read_json(path)
-      if File.exist? path
-        file = File.read path
-        JSON(file)
-      else
-        puts "No file at: #{path} did you call initialize this directory"
-      end
+    # Fetch
+    #
+    #  used in the fetch command from the CLI
+    #
+    def fetch(get_benchmarks, get_masks, screens)
+      verify_directories
+      local_store = DataStore.new(read_store)
+      ## no api key
+      return unless local_store.apikey
 
+      client = YordiTests.client
+      client.apikey = local_store.apikey
+      remote_data = client.fetch_application
+
+      ## no remote store
+      return unless remote_data
+
+      remote_store = DataStore.new(remote_data)
+
+      local_store.update_root_data(remote_store.title, remote_store.apikey)
+      replace_benchmarks(client, local_store, remote_store, screens) if get_benchmarks
+      replace_masks(local_store, remote_store, screens) if get_masks
+
+      save_store local_store.data
     end
 
-    def save_store(store_hash)
-      File.open(CONFIG_FILE, 'w') {|file| file.write(store_hash.to_json)}
+    # Generate a report
+    #
+    #  Used in the make_report command from the CLI
+    #
+    def generate_report
+      YordiTests::Generators::Report.start([REPORT_HTML, read_report])
     end
 
-    # Test entry from the CLI
+    # RunTest
+    #
+    #  USed in the test command from the CLI
     def run_test(path_to_screens, name, clean_dir, sync_all, sync_failures, filenames, screens)
+      verify_directories
       store = DataStore.new(read_store)
       if filenames
         files = []
@@ -50,9 +70,6 @@ module YordiTests
       else
         files = Dir.glob(File.join(path_to_screens, '*.png')).sort
       end
-
-      Dir.mkdir(BENCHMARKS_PATH) unless Dir.exist? BENCHMARKS_PATH
-      Dir.mkdir(SCREENS_PATH) unless Dir.exist? SCREENS_PATH
       responses = []
       files.each_with_index do |item, index|
         puts "Testing #{item}"
@@ -76,17 +93,48 @@ module YordiTests
         File.delete item if clean_dir
       end
       report_hash = {name: name, tests: responses}
-      File.open(REPORT_FILE, 'w') {|file| file.write(report_hash.to_json)}
+      save_report(report_hash)
 
       # sync with yorditests.com if desired
       sync_with_yordi store, sync_all, sync_failures if sync_all || sync_failures
       generate_report
     end
 
-    def generate_report
-      # generate report
-      YordiTests::Generators::Report.start([REPORT_HTML, read_report])
+    # helper functions
+
+    def store?
+      Dir.exist? YORDI_DIR
     end
+
+    def read_store
+      read_json(CONFIG_FILE)
+    end
+
+    def read_report
+      read_json(REPORT_FILE)
+    end
+
+    def read_json(path)
+      if File.exist? path
+        file = File.read path
+        JSON(file)
+      else
+        puts "No file at: #{path} did you call initialize this directory"
+      end
+
+    end
+    def save_report(store_hash)
+      save_data(REPORT_FILE, store_hash)
+    end
+
+    def save_store(store_hash)
+      save_data(CONFIG_FILE, store_hash)
+    end
+    def save_data(file_path, hash)
+      File.open(file_path, 'w') {|file| file.write(hash.to_json)}
+    end
+
+
 
     def sync_with_yordi(store, sync_all, sync_failures)
       # sync with remote
@@ -118,38 +166,10 @@ module YordiTests
       end
     end
 
-    # Fetch entry from the CLI
-    def fetch(get_benchmarks, get_masks, screens)
-      local_store = DataStore.new(read_store)
-      ## no api key
-      return unless local_store.apikey
-
-      client = YordiTests.client
-      client.apikey = local_store.apikey
-      remote_data = client.fetch_application
-
-      ## no remote store
-      return unless remote_data
-
-      remote_store = DataStore.new(remote_data)
-
-      update_store_base(local_store, remote_store)
-      replace_benchmarks(client, local_store, remote_store, screens) if get_benchmarks
-      replace_masks(local_store, remote_store, screens) if get_masks
-
-      save_store local_store.data
-    end
-
-    def update_store_base(local_store, remote_store)
-      local_store.put(TITLE, remote_store.get(TITLE))
-      local_store.put(APIKEY, remote_store.apikey)
-    end
-
     def replace_benchmarks(client, local_store, remote_store, screens)
+
       # no api key
       screens = remote_store.all_screens unless screens
-
-      Dir.mkdir(BENCHMARKS_PATH) unless Dir.exist? BENCHMARKS_PATH
 
       screens.each do |screen|
         benchmark = remote_store.benchmark_by_screenname(screen)
@@ -180,6 +200,11 @@ module YordiTests
       end
     end
 
+    def verify_directories
+      Dir.mkdir(YORDI_DIR) unless Dir.exist? YORDI_DIR
+      Dir.mkdir(BENCHMARKS_PATH) unless Dir.exist? BENCHMARKS_PATH
+      Dir.mkdir(SCREENS_PATH) unless Dir.exist? SCREENS_PATH
+    end
 
     def sanitize(filename)
       # Remove any character that aren't 0-9, A-Z, or a-z
