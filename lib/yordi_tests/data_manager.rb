@@ -92,11 +92,11 @@ module YordiTests
 
     def sync_with_yordi(store, sync_all, sync_failures)
       # sync with remote
-      puts "Syncing with YordiTests"
+      puts 'Syncing with YordiTests'
       report = read_report
       client = YordiTests.rest_client
       client.apikey = store.apikey if store.apikey
-      if !report.nil? && report['tests'].size > 0
+      if !report.nil? && !report['tests'].empty?
         reports = report['tests']
         failures = 0
         if sync_failures
@@ -104,13 +104,15 @@ module YordiTests
             failures += 1 unless item['passed']
           end
         end
+
         if sync_all || failures > 0
           client.start report['name']
           reports.each do |item|
+            next unless sync_all || !item['passed']
             puts item[SCREENNAME]
             benchmark = store.benchmark_by_screenname(item[SCREENNAME])
             filename = SCREENS_PATH + '/' + benchmark[LOCAL_FILENAME]
-            client.upload filename, item[SCREENNAME] if sync_all || (sync_failures && !item['passed'])
+            client.upload filename, item[SCREENNAME]
           end
           client.stop if sync_all || sync_failures
         end
