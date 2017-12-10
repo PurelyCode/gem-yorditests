@@ -19,6 +19,9 @@ module YordiTests
   REPORT_FILE = YORDI_DIR + '/report.json'.freeze
   REPORT_HTML = YORDI_DIR + '/report.html'.freeze
 
+  # set default value
+  @client = Client
+
   module_function
 
   def client=(v)
@@ -29,8 +32,7 @@ module YordiTests
     @client
   end
 
-  # set default value
-  @client = Client
+
 
   def new_client(apikey)
     client = new
