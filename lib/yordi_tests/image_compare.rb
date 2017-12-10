@@ -33,7 +33,7 @@ module YordiTests
     end
 
     def perform(screenname, benchmark_path, screenshot_path, global_mask, screen_mask)
-      response = {screenname: screenname, passed: false, message: 'None', has_diff: false}
+      response = {screenname: screenname, passed: false, message: 'None', has_diff: false, diff: nil}
 
       #compare images
       # begin
@@ -58,8 +58,6 @@ module YordiTests
           compare = MiniMagick::Tool::Compare.new(whiny: false)
           compare.metric('AE')
           compare.fuzz('5%')
-          # compare << benchmark.screenshot.path
-          # compare << test_item.screenshot.path
 
           compare << compare_mask_one
           compare << compare_mask_two
@@ -80,6 +78,7 @@ module YordiTests
             response[:message] = 'Hmm, has something changed, WTF!'
           end
 
+          response[:diff] = image_diff
           response[:has_diff] = true
           File.delete(compare_mask_one) unless compare_mask_one.nil?
           File.delete(compare_mask_two) unless compare_mask_two.nil?
