@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "This is a CLI to run standalone or integrate with online YordiTests.com"
   spec.description   = "This is a CLI to run standalone or integrate with online YordiTests.com"
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://www.yorditests.com"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "thor"
+  spec.add_dependency 'thor'
   spec.add_dependency 'rest-client'
   spec.add_dependency 'mini_magick', '~>4.8.0'
 
