@@ -92,10 +92,11 @@ module YordiTests
 
     def sync_with_yordi(store, sync_all, sync_failures)
       # sync with remote
+      return unless store.apikey
       puts 'Syncing with YordiTests'
       report = read_report
       client = YordiTests.client
-      client.apikey = store.apikey if store.apikey
+      client.apikey = store.apikey
       if !report.nil? && !report['tests'].empty?
         reports = report['tests']
         failures = 0

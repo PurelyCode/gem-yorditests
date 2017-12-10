@@ -10,4 +10,5 @@
 /.idea/
 /test/fixtures/
 /test/fixtures/benchmarks/
+/.yordi_tests/
 /test/fixtures/screenshots/
