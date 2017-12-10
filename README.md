@@ -78,7 +78,7 @@ So if you don't want to use YordiTests.com you can manually open the config.json
 and add some rectangles for masks as a value for masked_area: in the json, 
 you can use any image editing program to get the x, y, width and height you want 
 
-Here is a partial an example of a masked_area value, masked_area is an array. 
+Here is an example of a masked_area value, masked_area is an array. 
 ``` javascript
   masked_area: [
      {
@@ -98,7 +98,7 @@ Here is a partial an example of a masked_area value, masked_area is an array.
    ]
 ```
 In the config.json the property masked_area: is available in the root and in individual screens in the test_benchmarks array. 
-Placing an mask in root will have the mask be applied to all screens during the comparision. Placing the mask on a screen will apply the mask only to that screen.
+Placing a mask in root will have the mask be applied to all screens during the comparision. Placing the mask on a screen will apply the mask only to that screen.
 So the screens get compared after both the benchmark and resulting screenshot have all global and local masks applied. 
 
 
