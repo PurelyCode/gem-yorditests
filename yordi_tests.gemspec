@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.description   = "This is and alpha versiona nd under constant development, not yet stable"
   spec.homepage      = "https://www.yorditests.com"
   spec.license       = "MIT"
-
+  spec.required_ruby_version = '~> 2.0'
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
@@ -30,9 +30,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'thor'
-  spec.add_dependency 'rest-client'
-  spec.add_dependency 'mini_magick', '~>4.8.0'
+  spec.add_dependency 'thor', '~>0.20'
+  spec.add_dependency 'rest-client', '~>2.0'
+  spec.add_dependency 'mini_magick', '~>4.8'
 
 
   spec.add_development_dependency "bundler", "~> 1.15"
