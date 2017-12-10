@@ -136,29 +136,27 @@ module YordiTests
       return unless store.apikey
       puts 'Syncing with YordiTests'
       report = read_report
+      return if report.nil? || report['tests'].empty?
+      reports = report['tests']
+
       client = YordiTests.client
       client.apikey = store.apikey
-      if !report.nil? && !report['tests'].empty?
-        reports = report['tests']
-        failures = 0
-        if sync_failures
-          reports.each do |item|
-            failures += 1 unless item['passed']
-          end
-        end
 
-        if sync_all || failures > 0
-          client.start report['name']
-          reports.each do |item|
-            next unless sync_all || !item['passed']
-            puts item[SCREENNAME]
-            benchmark = store.benchmark_by_screenname(item[SCREENNAME])
-            filename = File.join(SCREENS_PATH, benchmark[LOCAL_FILENAME])
-            client.upload filename, item[SCREENNAME]
-          end
-          client.stop
-        end
+      # filter out passed tests if failures syncing is on
+      if sync_failures && !sync_all
+        reports = reports.reject {|item| item['passed']}
       end
+
+      return unless sync_all || !reports.empty?
+
+      client.start report['name']
+      reports.each do |item|
+        puts "Uploading #{item[SCREENNAME]}"
+        benchmark = store.benchmark_by_screenname(item[SCREENNAME])
+        filename = File.join(SCREENS_PATH, benchmark[LOCAL_FILENAME])
+        client.upload filename, item[SCREENNAME]
+      end
+      client.stop
     end
 
     def replace_benchmarks(client, local_store, remote_store, screens)
