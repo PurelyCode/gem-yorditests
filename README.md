@@ -57,8 +57,8 @@ Push benchmarks and masks to online store (not yet implemented)
   yordi push -bm  # pushes all benchmark details and masks to online store
 ```
 ### Standalone Scenario
-So you have run an appium or selenium test that made a lot of screenshots
-Wherever you want to run your yordi test do the follow
+So you have run an appium or selenium test that made a lot of screenshots.
+Wherever you want to run your yordi test do the following.
 ``` ruby
   yordi init
   yordi test path/to/screenshot
