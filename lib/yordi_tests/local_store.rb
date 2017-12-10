@@ -27,7 +27,8 @@ module YordiTests
     end
 
     def get(key)
-      @store[key]
+      return @store[key].dup unless @store[key].nil?
+      nil
     end
 
     def all_screens
@@ -54,7 +55,7 @@ module YordiTests
       if benchmark_pos < 0
         @store[BENCHMARKS] << benchmark.dup
       else
-        @store[BENCHMARKS][benchmark_pos][MASKED_AREA] = benchmark[MASKED_AREA]
+        @store[BENCHMARKS][benchmark_pos][MASKED_AREA] = benchmark[MASKED_AREA].dup unless benchmark[MASKED_AREA].nil?
       end
     end
 
