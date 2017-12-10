@@ -6,18 +6,13 @@ module YordiTests
   module DataManager
     module_function
 
-    def default_store(apikey)
-      {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
-    end
-
-
     # Create Store
     #
     #   Called during init process on the CLI
     #
     def create_store(apikey)
       verify_directories
-      store = DataManager.default_store(apikey)
+      store = {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
       puts "Saving store #{CONFIG_FILE}"
       DataManager.save_store store
     end
@@ -123,6 +118,7 @@ module YordiTests
       end
 
     end
+
     def save_report(store_hash)
       save_data(REPORT_FILE, store_hash)
     end
@@ -130,10 +126,10 @@ module YordiTests
     def save_store(store_hash)
       save_data(CONFIG_FILE, store_hash)
     end
+
     def save_data(file_path, hash)
       File.open(file_path, 'w') {|file| file.write(hash.to_json)}
     end
-
 
 
     def sync_with_yordi(store, sync_all, sync_failures)
