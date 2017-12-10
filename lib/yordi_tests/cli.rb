@@ -32,8 +32,8 @@ module YordiTests
     method_option :clean_dir, type: :boolean, default: false, aliases: '-D', desc: 'Delete all screenshots in the folder you specified after test completes.'
     method_option :sync_all, type: :boolean, default: false, aliases: '-a', desc: 'Push all screens to YordiTests.com for evaluation.'
     method_option :sync_failures, type: :boolean, default: false, aliases: '-f', desc: 'Push only failed screens to YordiTests.com for evaluation.'
-    method_option :filenames, type: :array, aliases: '-i', desc: 'Use these names to register screens'
-    method_option :screens, type: :array, aliases: '-s', desc: 'Only fetch items associated with this list of screen names'
+    method_option :filenames, type: :array, aliases: '-i', desc: 'Only test these specific files'
+    method_option :screens, type: :array, aliases: '-s', desc: 'Give the files a name other than there filename in the report (best used with -i option)'
 
     def test(path_to_screens)
       puts "Testing #{path_to_screens} name: #{options.name}, clean_dir: #{options.clean_dir}, sync_all: #{options.sync_all}, sync_failures: #{options.sync_failures}, filenames: #{options.filenames}, screens: #{options.screens}"

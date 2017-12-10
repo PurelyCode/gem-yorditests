@@ -43,4 +43,9 @@ module YordiTests
   # set default value
   @rest_client = YordiTests::Impl.create(Client)
 
+  def new_client(apikey)
+    client = YordiTests::Impl.create(Client)
+    client.set_apikey(apikey)
+    client
+  end
 end
