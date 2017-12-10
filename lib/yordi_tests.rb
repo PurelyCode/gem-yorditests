@@ -3,8 +3,7 @@ require 'yordi_tests/client'
 module YordiTests
   DEFAULT_APIKEY = "none"
 
-  #HOST = 'https://yorditests.com'.freeze
-  HOST = 'http://localhost:3000'.freeze
+  HOST = 'https://yorditests.com'.freeze
   START_PATH = '/api/v1/start'.freeze
   UPLOAD_PATH = '/api/v1/upload'.freeze
   STOP_PATH = '/api/v1/stop'.freeze
