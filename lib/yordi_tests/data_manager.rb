@@ -13,8 +13,8 @@ module YordiTests
     def create_store(apikey)
       verify_directories
       store = {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
-      puts "Saving store #{CONFIG_FILE}"
-      DataManager.save_store store
+      YordiTests.safe_puts "Saving store #{CONFIG_FILE}"
+      save_store store
     end
 
     # Fetch
@@ -24,8 +24,10 @@ module YordiTests
     def fetch(get_benchmarks, get_masks, screens)
       verify_directories
       local_store = DataStore.new(read_store)
+
       ## no api key
       return unless local_store.apikey
+
       client = YordiTests.client
       client.apikey = local_store.apikey
       remote_data = client.fetch_application
@@ -52,7 +54,7 @@ module YordiTests
 
     # RunTest
     #
-    #  USed in the test command from the CLI
+    #  Used in the test command from the CLI
     def run_test(path_to_screens, name, clean_dir, sync_all, sync_failures, filenames, screens)
       verify_directories
       store = DataStore.new(read_store)
@@ -66,7 +68,7 @@ module YordiTests
       end
       responses = []
       files.each_with_index do |item, index|
-        puts "Testing #{item}"
+        YordiTests.safe_puts "Testing #{item}"
         screenname = !screens.nil? && screens.size > index ? screens[index] : File.basename(item, '.*')
         benchmark = store.benchmark_by_screenname(screenname)
         local_name = benchmark.nil? ? sanitize(screenname) + File.extname(item) : benchmark[LOCAL_FILENAME]
@@ -113,7 +115,7 @@ module YordiTests
         file = File.read path
         JSON(file)
       else
-        puts "No file at: #{path} did you call initialize this directory"
+        YordiTests.safe_puts "No file at: #{path} did you call initialize this directory"
       end
 
     end
@@ -134,7 +136,7 @@ module YordiTests
     def sync_with_yordi(store, sync_all, sync_failures)
       # sync with remote
       return unless store.apikey
-      puts 'Syncing with YordiTests'
+      YordiTests.safe_puts 'Syncing with YordiTests'
       report = read_report
       return if report.nil? || report['tests'].empty?
       reports = report['tests']
@@ -151,7 +153,7 @@ module YordiTests
 
       client.start report['name']
       reports.each do |item|
-        puts "Uploading #{item[SCREENNAME]}"
+        YordiTests.safe_puts "Uploading #{item[SCREENNAME]}"
         benchmark = store.benchmark_by_screenname(item[SCREENNAME])
         filename = File.join(SCREENS_PATH, benchmark[LOCAL_FILENAME])
         client.upload filename, item[SCREENNAME]
@@ -169,7 +171,7 @@ module YordiTests
         benchmark[LOCAL_FILENAME] = sanitize(screen) + File.extname(benchmark[FILENAME])
 
         # download benchmark
-        puts "Downloading #{screen}"
+        YordiTests.safe_puts "Downloading #{screen}"
         benchmark_image = client.fetch_benchmark(screen)
 
         # update store to reflex file name of benchmark
@@ -186,7 +188,7 @@ module YordiTests
       screens.each do |screen|
         benchmark = remote_store.benchmark_by_screenname(screen)
         # download benchmark
-        puts "Update mask for #{screen}"
+        YordiTests.safe_puts "Update mask for #{screen}"
         local_store.update_mask(benchmark) if benchmark
       end
     end

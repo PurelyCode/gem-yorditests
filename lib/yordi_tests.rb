@@ -21,8 +21,13 @@ module YordiTests
 
   # set default value
   @client = Client
+  @verbose = true
 
   module_function
+
+  def verbose=(v)
+    @verbose = v
+  end
 
   def client=(v)
     @client = v
@@ -32,6 +37,9 @@ module YordiTests
     @client
   end
 
+  def safe_puts(message)
+    puts message if @verbose
+  end
 
   def new_client(apikey)
     client = new
