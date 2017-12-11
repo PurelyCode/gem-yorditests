@@ -11,6 +11,7 @@ module YordiTests
     #   Called during init process on the CLI
     #
     def create_store(apikey)
+      YordiTests.safe_puts "Initializing #{YORDI_DIR} "
       verify_directories
       store = {title: 'YordiTests', apikey: apikey, test_benchmarks: []}
       YordiTests.safe_puts "Saving store #{CONFIG_FILE}"
@@ -30,6 +31,8 @@ module YordiTests
 
       client = YordiTests.client
       client.apikey = local_store.apikey
+
+      YordiTests.safe_puts 'Fetching remote store.'
       remote_data = client.fetch_application
 
       ## no remote store

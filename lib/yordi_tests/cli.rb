@@ -13,15 +13,15 @@ module YordiTests
     def init
       YordiTests.verbose = options.verbose
       YordiTests.safe_puts 'init'
+
       if DataManager.store?
-        YordiTests.safe_puts 'Already initialized'
+        puts 'Already initialized'
         exit(1) unless options.force
       end
-      YordiTests.safe_puts "Initializing #{YORDI_DIR} "
+
       DataManager.create_store(options.api_key)
 
       return unless options.api_key
-      YordiTests.safe_puts 'Fetching remote store.'
       DataManager.fetch(true, true, nil)
     end
 
