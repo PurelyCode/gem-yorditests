@@ -14,9 +14,9 @@ module YordiTests
       YordiTests.verbose = options.verbose
       YordiTests.safe_puts 'init'
 
-      if DataManager.store?
+      if DataManager.store? && !options.force
         puts 'Already initialized'
-        exit(1) unless options.force
+        exit(1)
       end
 
       DataManager.create_store(options.api_key)
